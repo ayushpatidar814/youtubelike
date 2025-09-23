@@ -3,7 +3,7 @@ import connectDb from './db/mongoDb.js';
 import app from './app.js';
 
 dotenv.config(
-    // { path: './env' }
+    // { path: './.env' }
 );
 
 await connectDb()
@@ -15,3 +15,4 @@ await connectDb()
 .catch((err) => {
     console.log("Failed to connect mongodb: ", err);
 })
+
