@@ -1,1 +1,4 @@
-export const DB_NAME = "Youtubelike";
+const DB_NAME = "Youtubelike"
+
+
+export { DB_NAME };
