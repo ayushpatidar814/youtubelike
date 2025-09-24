@@ -147,8 +147,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             }
         },
         {
@@ -215,11 +215,10 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
 })
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
-    const {oldPassword, newPassword, confirmPassword} = req.body;
-
-    if(!(newPassword === confirmPassword)){
-        throw new apiError(400, "New Password and Confirm Password should be same")
-    }
+    const {oldPassword, newPassword} = req.body;
+    // if(!(newPassword === confirmPassword)){
+    //     throw new apiError(400, "New Password and Confirm Password should be same")
+    // }
 
     const user = await User.findById(req.user._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
@@ -234,14 +233,14 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(
-        new apiResponse(200, "Password Changed successfully")
+        new apiResponse(200, {}, "Password Changed successfully")
     )
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
     .status(200)
-    .json(200, req.user, "Current user fetched successfully")
+    .json(new apiResponse(200, req.user, "Current user fetched successfully"))
 })
 
 
@@ -325,7 +324,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     const channel = await User.aggregate([
         {
             $match:{
-                username: username?.toLoweCase()
+                username: username?.toLowerCase()
             }
         },
         {
@@ -431,7 +430,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 
     return res
     .status(200)
-    .json(new apiResponse(200, user[0].WatchHistory, "Watch History fetched successfully"))
+    .json(new apiResponse(200, user[0].watchHistory, "Watch History fetched successfully"))
 })
 
 
